@@ -26,4 +26,5 @@
     <string name="app_info_name">App name : </string>
     <string name="app_info_author">Author : R-Koubou</string>    
     <string name="app_info_version">Version : </string>
+    <string name="shareTitle">Send picture to…</string>
 </resources>

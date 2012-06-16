@@ -4,13 +4,16 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 public class EazyReductionActivity extends Activity implements Constants
 {
     private ReductionContext reductionContext;
+
+    static private final String TAG = "EazyReductionActivity";
 
     //////////////////////////////////////////////////////////////////////////
     /**
@@ -40,7 +45,16 @@ public class EazyReductionActivity extends Activity implements Constants
         Intent intent = getIntent();
         if( intent != null )
         {
-            loadImage( intent.getData() );
+            Uri uri;
+            if( Intent.ACTION_SEND.equals( intent.getAction() ) )
+            {
+                uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            }
+            else
+            {
+                uri = intent.getData();
+            }
+            loadImage( uri );
         }
 
         if( firstBoot )
@@ -228,7 +242,35 @@ public class EazyReductionActivity extends Activity implements Constants
 
         if( result )
         {
-            Toast.makeText( this, getString( R.string.saveOK ) + path, TOAST_SHOW_TIME ).show();
+            // インテントで画像を渡す
+            {
+                Uri uri = Uri.fromFile( new File( path ) );
+                Intent intent = new Intent( Intent.ACTION_SEND );
+
+                String mime = "";
+                switch( format )
+                {
+                    case JPEG: mime = "image/jpeg"; break;
+                    case PNG : mime = "image/png";  break;
+                    default:
+                        Log.w( TAG, "MIME not set. Cannot launch intent!" );
+                        return;
+                }
+
+                intent.setType( mime );
+                intent.putExtra( Intent.EXTRA_STREAM, uri );
+
+                // 外部アプリを起動する
+                try
+                {
+                    startActivity( Intent.createChooser( intent, getString( R.string.shareTitle ) ) );
+                    finish();
+                }
+                catch( ActivityNotFoundException e )
+                {
+                    Log.e( TAG, "Cannot start Activity", e );
+                }
+            }
         }
         else
         {
@@ -242,14 +284,34 @@ public class EazyReductionActivity extends Activity implements Constants
      */
     synchronized private void loadImage( Uri uri )
     {
-        if( uri == null ){ return; }
+        if( uri == null )
+        {
+            Log.w( TAG, "#loadimage() : uri is null." );
+            return;
+        }
         ImageView imageView = (ImageView)findViewById( R.id.imageView );
         try
         {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap( this.getContentResolver(), uri );
+            Log.d( TAG, "Open from " + uri.toString() );
+            Bitmap bitmap   = MediaStore.Images.Media.getBitmap( this.getContentResolver(), uri );
+            String filePath = null;
+
+            if( !uri.getScheme().equals( "file" ) )
+            {
+                Log.d( TAG, "Image is not received from file. Scheme is " + uri.getScheme() );
+                Cursor c = getContentResolver().query( uri, null, null, null, null );
+                c.moveToFirst();
+                filePath = c.getString( c.getColumnIndex( MediaStore.MediaColumns.DATA ) );
+                Log.d( TAG,  "Converted from " + uri.getScheme() +  " to file. filename is " + filePath );
+            }
+            if( filePath == null )
+            {
+                filePath = uri.getPath();
+            }
+
             if( bitmap != null )
             {
-                File path = new File( uri.getPath() );
+                File path = new File( filePath );
                 imageView.setImageBitmap( bitmap );
                 reductionContext.setCurrentBitmap( bitmap );
                 reductionContext.setCurrentFileName( path.getName().replaceAll( "\\.[^\\,]+$", "" ) );
