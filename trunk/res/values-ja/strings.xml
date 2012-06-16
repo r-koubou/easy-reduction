@@ -25,5 +25,6 @@
     <string name="app_info_name">アプリ名 : </string>
     <string name="app_info_author">作者 : あーる工房</string>
     <string name="app_info_version">バージョン : </string>
+    <string name="shareTitle">写真を送る</string>
     
 </resources>

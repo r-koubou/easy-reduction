@@ -13,7 +13,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
-                <data android:mimeType="image/*" android:scheme="file"></data>
+                <data android:mimeType="image/jpg"></data>
+                <data android:mimeType="image/jpeg"></data>
+                <data android:mimeType="image/png"></data>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <data android:mimeType="image/jpg"></data>
+                <data android:mimeType="image/jpeg"></data>
+                <data android:mimeType="image/png"></data>
+            </intent-filter><intent-filter>
+                <action android:name="com.cooliris.media.action.REVIEW"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <data android:mimeType="image/jpg"></data>
+                <data android:mimeType="image/jpeg"></data>
+                <data android:mimeType="image/png"></data>
             </intent-filter>
 
         </activity>
