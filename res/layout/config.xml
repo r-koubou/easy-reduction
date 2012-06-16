@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent">
+    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/editLayout">
+        <TextView android:id="@+id/saveDirLabel" android:text="@string/configSaveDir" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+        <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/dirEditBox" android:singleLine="true"></EditText>
+        <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/mkdirRelativeLayout">
+            <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_alignParentRight="true" android:text="@string/createDir" android:id="@+id/configMkDirButton"></Button>
+        </RelativeLayout>
+        <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical" android:id="@+id/formatLayout">
+            <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/formatLabel" android:text="@string/formatLabel"></TextView>
+            <RadioGroup android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/formatRadioGroup">
+                <RadioButton android:layout_height="wrap_content" android:id="@+id/radioJpeg" android:text="JPEG" android:layout_width="wrap_content" android:checked="true"></RadioButton>
+                <RadioButton android:layout_height="wrap_content" android:id="@+id/radioPNG" android:text="PNG" android:layout_width="wrap_content"></RadioButton>
+            </RadioGroup>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/quorityLabel" android:id="@+id/quorityLabel"></TextView>
+            <TextView android:layout_width="wrap_content" android:id="@+id/quorityValue" android:text="1" android:layout_height="wrap_content"></TextView>
+            <SeekBar android:layout_height="wrap_content" android:id="@+id/quorityLevelBar" android:max="100" android:layout_width="fill_parent"></SeekBar>
+            <LinearLayout android:layout_weight="1" android:id="@+id/quorityLevelLabelLayout" android:layout_height="match_parent" android:layout_width="match_parent">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/quorityLabelLow" android:text="@string/quority_low"></TextView>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="right" android:id="@+id/quorityLabelHigh" android:text="@string/quority_high"></TextView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_height="wrap_content" android:id="@+id/buttonLayout" android:layout_width="fill_parent">
+        <Button android:layout_weight="1" android:text="@string/apply" android:layout_height="wrap_content" android:layout_width="0dp" android:id="@+id/configApplyButton"></Button>
+        <Button android:layout_weight="1" android:text="@string/cancel" android:layout_height="wrap_content" android:layout_width="0dp" android:id="@+id/configCancelButton"></Button>
+    </LinearLayout>
+</LinearLayout>
