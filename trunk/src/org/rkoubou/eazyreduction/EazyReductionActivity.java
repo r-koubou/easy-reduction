@@ -26,6 +26,10 @@ public class EazyReductionActivity extends Activity implements Constants
     private ReductionContext reductionContext;
 
     static private final String TAG = "EazyReductionActivity";
+    static private final int REQUEST_CONFIG = 1;
+
+    static private final int ACTION_DEFAULT = 1;
+    private int action = ACTION_DEFAULT;
 
     //////////////////////////////////////////////////////////////////////////
     /**
@@ -45,16 +49,20 @@ public class EazyReductionActivity extends Activity implements Constants
         Intent intent = getIntent();
         if( intent != null )
         {
-            Uri uri;
+            Uri uri = null;
             if( Intent.ACTION_SEND.equals( intent.getAction() ) )
             {
-                uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                uri = intent.getParcelableExtra( Intent.EXTRA_STREAM );
             }
             else
             {
                 uri = intent.getData();
             }
-            loadImage( uri );
+
+            if( uri != null )
+            {
+                loadImage( uri );
+            }
         }
 
         if( firstBoot )
@@ -93,7 +101,7 @@ public class EazyReductionActivity extends Activity implements Constants
                 config.putExtra( ReductionContext.KEY_SAVEDIR, reductionContext.getSaveDir() );
                 config.putExtra( ReductionContext.KEY_QUORITY, reductionContext.getQuality() );
                 config.putExtra( ReductionContext.KEY_FORMAT,  reductionContext.getFormat().name() );
-                startActivityForResult( config, 1 );
+                startActivityForResult( config, REQUEST_CONFIG );
                 return true;
             }
         });
@@ -123,7 +131,7 @@ public class EazyReductionActivity extends Activity implements Constants
     {
         super.onActivityResult( requestCode, resultCode, data );
 
-        if( resultCode == RESULT_OK )
+        if( requestCode == REQUEST_CONFIG && resultCode == RESULT_OK )
         {
             reductionContext.setSaveDir( data.getExtras().getString( ReductionContext.KEY_SAVEDIR ) );
             reductionContext.setQuality( data.getExtras().getInt( ReductionContext.KEY_QUORITY ) );
@@ -187,6 +195,8 @@ public class EazyReductionActivity extends Activity implements Constants
         rotateBitmap( -90 );
     }
 
+
+
     //////////////////////////////////////////////////////////////////////////
     /**
      * 画像の回転
@@ -242,20 +252,21 @@ public class EazyReductionActivity extends Activity implements Constants
 
         if( result )
         {
+            String mime = "";
+            switch( format )
+            {
+                case JPEG: mime = "image/jpeg"; break;
+                case PNG : mime = "image/png";  break;
+                default:
+                    Log.w( TAG, "MIME not set. Cannot launch intent!" );
+                    return;
+            }
+
             // インテントで画像を渡す
+            if( action == ACTION_DEFAULT )
             {
                 Uri uri = Uri.fromFile( new File( path ) );
                 Intent intent = new Intent( Intent.ACTION_SEND );
-
-                String mime = "";
-                switch( format )
-                {
-                    case JPEG: mime = "image/jpeg"; break;
-                    case PNG : mime = "image/png";  break;
-                    default:
-                        Log.w( TAG, "MIME not set. Cannot launch intent!" );
-                        return;
-                }
 
                 intent.setType( mime );
                 intent.putExtra( Intent.EXTRA_STREAM, uri );
@@ -264,7 +275,6 @@ public class EazyReductionActivity extends Activity implements Constants
                 try
                 {
                     startActivity( Intent.createChooser( intent, getString( R.string.shareTitle ) ) );
-                    finish();
                 }
                 catch( ActivityNotFoundException e )
                 {
