@@ -1,14 +1,15 @@
 
 package org.rkoubou.eazyreduction;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 
+/**
+ * Reduction context
+ */
 public class ReductionContext implements Constants
 {
     private final Context owner;
@@ -44,17 +45,13 @@ public class ReductionContext implements Constants
 
         if( "".equals( saveDir ) )
         {
+            saveDir = DEFAULT_SAVE_DIR;
             initialize = true;
-        }
-        else
-        {
-            File d = new File( saveDir );
-            initialize =( ! d.exists() || ! d.isDirectory() );
         }
 
         if( initialize )
         {
-            saveDir = DEFAULT_SAVE_DIR;
+            savePreference();
         }
 
         return initialize;
@@ -64,14 +61,17 @@ public class ReductionContext implements Constants
     /**
      * 設定書き込み
      */
-    public void savePreference()
+    public boolean savePreference()
     {
         SharedPreferences p = owner.getSharedPreferences( CONFIG_PREFERENCE_NAME, Context.MODE_PRIVATE );
-        Editor e = p.edit();
+        Editor e            = p.edit();
+        boolean result;
+
         e.putString( KEY_SAVEDIR, saveDir );
         e.putInt( KEY_QUORITY, quality );
         e.putString( KEY_FORMAT, format.name() );
-        e.commit();
+        result = e.commit();
+        return result;
     }
 
     //////////////////////////////////////////////////////////////////////////

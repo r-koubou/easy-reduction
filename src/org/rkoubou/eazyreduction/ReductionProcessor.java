@@ -12,7 +12,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Matrix;
 
 /**
- * 縮小処理の実装。
+ * Implementation of Image reduction 縮小処理の実装。
  */
 public class ReductionProcessor
 {

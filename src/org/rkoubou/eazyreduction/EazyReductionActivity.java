@@ -5,11 +5,13 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -61,15 +63,26 @@ public class EazyReductionActivity extends Activity implements Constants
 
             if( uri != null )
             {
-                loadImage( uri );
+                if( !loadImage( uri ) )
+                {
+                    AlertDialog.Builder b = new AlertDialog.Builder( this );
+                    b.setTitle( getString( R.string.error ) );
+                    b.setMessage( getString( R.string.failedLoad ) );
+                    b.setPositiveButton( getString( R.string.ok ), new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick( DialogInterface dialog, int which )
+                        {
+                            finish();
+                        }
+                    });
+                    b.create().show();
+                }
             }
         }
 
         if( firstBoot )
         {
-            File dir = new File( DEFAULT_SAVE_DIR );
-            dir.mkdir();
-
             AlertDialog.Builder b = new AlertDialog.Builder( this );
             b.setTitle( getString( R.string.welocome ) );
             b.setMessage( getString( R.string.firstMsg1 ) + " '"+ reductionContext.getSaveDir() + "' " + getString( R.string.firstMsg2 ) );
@@ -147,6 +160,28 @@ public class EazyReductionActivity extends Activity implements Constants
     protected void onPause()
     {
         super.onPause();
+        reductionContext.savePreference();
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    /**
+     * @see android.app.Activity#onStop()
+     */
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        reductionContext.savePreference();
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    /**
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
         reductionContext.savePreference();
     }
 
@@ -248,6 +283,15 @@ public class EazyReductionActivity extends Activity implements Constants
             return;
         }
 
+        // Create a directory if not exists
+        File dir = new File( saveDir );
+        if( ! dir.exists() && ! dir.mkdir() )
+        {
+            // Failed to mkdir
+            Toast.makeText( this, getString( R.string.saveNG ), TOAST_SHOW_TIME ).show();
+            return;
+        }
+
         result = ReductionProcessor.resize( reductionContext, scale );
 
         if( result )
@@ -292,18 +336,19 @@ public class EazyReductionActivity extends Activity implements Constants
     /**
      * 加工元の画像のロード
      */
-    synchronized private void loadImage( Uri uri )
+    synchronized private boolean loadImage( Uri uri )
     {
         if( uri == null )
         {
             Log.w( TAG, "#loadimage() : uri is null." );
-            return;
+            return false;
         }
+
         ImageView imageView = (ImageView)findViewById( R.id.imageView );
         try
         {
             Log.d( TAG, "Open from " + uri.toString() );
-            Bitmap bitmap   = MediaStore.Images.Media.getBitmap( this.getContentResolver(), uri );
+            Bitmap bitmap;
             String filePath = null;
 
             if( !uri.getScheme().equals( "file" ) )
@@ -319,6 +364,8 @@ public class EazyReductionActivity extends Activity implements Constants
                 filePath = uri.getPath();
             }
 
+            bitmap = MediaStore.Images.Media.getBitmap( this.getContentResolver(), uri );
+
             if( bitmap != null )
             {
                 File path = new File( filePath );
@@ -326,13 +373,52 @@ public class EazyReductionActivity extends Activity implements Constants
                 reductionContext.setCurrentBitmap( bitmap );
                 reductionContext.setCurrentFileName( path.getName().replaceAll( "\\.[^\\,]+$", "" ) );
 
+                // EXIF から回転情報を取得し、Viewに反映
+                if( filePath.endsWith( "jpg" ) || filePath.endsWith( "jpeg" ) ||
+                    filePath.endsWith( "JPG" ) || filePath.endsWith( "JPEG" ) )
+                {
+                    try
+                    {
+                        int degree = 0;
+
+                        ExifInterface exifInterface = new ExifInterface( filePath );
+                        int orientation = exifInterface.getAttributeInt( ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED );
+
+                        if( orientation == ExifInterface.ORIENTATION_ROTATE_90 )
+                        {
+                            degree = 90;
+                        }
+                        else if( orientation == ExifInterface.ORIENTATION_ROTATE_180 )
+                        {
+                            degree = 180;
+                        }
+                        else if( orientation == ExifInterface.ORIENTATION_ROTATE_270 )
+                        {
+                            degree = 270;
+                        }
+
+                        if( degree >= 0 )
+                        {
+                            rotateBitmap( degree );
+                        }
+                    }
+                    catch( Throwable e )
+                    {
+                        Log.w( TAG, e );
+                    }
+                }
+
                 // ウインドウタイトルをファイ名込みにしてみる
                 setTitle( getResources().getString( R.string.app_name ) + " - " + path.getName() );
             }
+
+            return true;
+
         }
-        catch( Exception e )
+        catch( Throwable e )
         {
-            e.printStackTrace();
+            Log.e( TAG, "Error", e );
+            return false;
         }
     }
 }
