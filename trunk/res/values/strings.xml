@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Eazy Reduction</string>
     <string name="welocome">Welcome!</string>
     <string name="ok">OK</string>
@@ -26,5 +27,8 @@
     <string name="app_info_name">App name : </string>
     <string name="app_info_author">Author : R-Koubou</string>    
     <string name="app_info_version">Version : </string>
-    <string name="shareTitle">Send picture to…</string>
+    <string name="shareTitle">Send picture to</string>
+    <string name="error">Error</string>
+    <string name="failedLoad">Failed to Load Image</string>
+
 </resources>

@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
- *
+ * Application Information Activity
  */
 public class InformationActivity extends Activity
 {

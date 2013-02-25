@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- *
+ * Application Config Activity
  */
 public class ConfigActivity extends Activity implements Constants
 {
@@ -44,7 +44,7 @@ public class ConfigActivity extends Activity implements Constants
     }
 
     /**
-     *
+     * Construct a UI Components
      */
     private void initComponent()
     {
@@ -123,7 +123,7 @@ public class ConfigActivity extends Activity implements Constants
                     }
                 }
 
-                Toast.makeText( ConfigActivity.this, toastText, 3000 ).show();
+                Toast.makeText( ConfigActivity.this, toastText, TOAST_SHOW_TIME ).show();
 
             }
         });
@@ -166,7 +166,7 @@ public class ConfigActivity extends Activity implements Constants
     }
 
     /**
-     *
+     * Parse intent arguments from Main Activity.
      */
     private void parseIntentArgs( Intent from )
     {
@@ -213,7 +213,7 @@ public class ConfigActivity extends Activity implements Constants
     }
 
     /**
-     *
+     * if user canceled.
      */
     private void abort()
     {
