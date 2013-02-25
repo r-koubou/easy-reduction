@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Eazy Reduction</string><string name="welocome">ようこそ</string>
+    <string name="ok">OK</string>
+    <string name="firstMsg1">初期設定では、</string>
+    <string name="firstMsg2">にリサイズした画像を保存します。保存場所を変更する場合はメニューボタンを押して設定を変更してください。</string>
+    <string name="leftRotate">左回転</string>
+    <string name="rightRotate">右回転</string>
+    <string name="config">設定</string>
+    <string name="configSaveDir">【保存先】</string>
+    <string name="createDir">ディレクトリ作成</string>
+    <string name="createDirOK">ディレクトリを作成しました：</string>
+    <string name="createDirNG">ディレクトリを作成できませんでした：</string>
+    <string name="createDirExist">既にディレクトリは作成されています：</string>
+    <string name="apply">適用</string>
+    <string name="cancel">キャンセル</string>
+    <string name="saveOK">保存しました：</string>
+    <string name="saveNG">保存できませんでした：</string>
+    <string name="formatLabel">【保存形式】</string>
+    <string name="quorityLabel">【画像品質】</string>
+    <string name="quority_high">高品質</string>
+    <string name="quority_low">低品質</string>
+    <string name="close">閉じる</string>
+    <string name="app_information">情報</string>
+    <string name="app_info_name">アプリ名 : </string>
+    <string name="app_info_author">作者 : あーる工房</string>
+    <string name="app_info_version">バージョン : </string>
+    <string name="shareTitle">写真を送る</string>
+    <string name="error">エラー</string>
+    <string name="failedLoad">画像を読み込めません。</string>
+    
+</resources>

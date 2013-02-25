@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Eazy Reduction</string>
+    <string name="welocome">Welcome!</string>
+    <string name="ok">OK</string>
+    <string name="firstMsg1">By default, resized image saves to</string>
+    <string name="firstMsg2">If you change the save directory, press the "menu" button, and configure. </string>
+    <string name="leftRotate">Left Rotation</string>
+    <string name="rightRotate">Right Rotation</string>
+    <string name="config">Config</string>
+    <string name="configSaveDir">[Image saves to]</string>
+    <string name="createDir">Create a directory</string>
+    <string name="createDirOK">Created a directory : </string>
+    <string name="createDirNG">Failed to create directory : </string>
+    <string name="createDirExist">Already directory exist : </string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+    <string name="saveOK">Resized to </string>
+    <string name="saveNG">Failed to resize.</string>
+    <string name="formatLabel">[Format]</string>
+    <string name="quorityLabel">[Quority]</string>
+    <string name="quority_high">High</string>
+    <string name="quority_low">Low</string>
+    <string name="close">Close</string>
+    <string name="app_information">Information</string>
+    <string name="app_info_name">App name : </string>
+    <string name="app_info_author">Author : R-Koubou</string>    
+    <string name="app_info_version">Version : </string>
+    <string name="shareTitle">Send picture to</string>
+    <string name="error">Error</string>
+    <string name="failedLoad">Failed to Load Image</string>
+
+</resources>
